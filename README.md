@@ -79,7 +79,7 @@ The program logs state changes to standard output in the format specified by the
 
 ### AI Usage
 
-A local AI model (`Qwen3.8-4B-Distill-GGUF`, Q8_0 quantization) was used throughout development for:
+A local AI model (`LFM2.5-2.6B-GGUF`, Q8_0 quantization) was used throughout development for:
 
 - Scaffolding the initial project structure (Makefile, source files, headers).
 - Explaining the Dining Philosophers problem and its mapping to the Codexion simulation.
