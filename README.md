@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 *This project has been created as part of the 42 curriculum by diosoare*
 
 # Codexion
@@ -273,6 +272,4 @@ The monitor thread operates concurrently with the coder threads. It reads shared
 
 The Codexion simulation is a rich exercise in concurrent programming. It requires not only the mechanical skills of using `pthread_create`, `pthread_mutex_lock`, and `pthread_cond_wait`, but also a deep understanding of why these primitives exist and how they interact. The challenges of deadlock, starvation, race conditions, and liveness are not abstract. They manifest concretely in the behavior of the simulation. A correct solution must demonstrate both technical proficiency and conceptual clarity.
 
-=======
 Codexion
->>>>>>> 071fb4ff5224e5e481bde7f45e6916e1387d31e5
