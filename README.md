@@ -271,5 +271,3 @@ The monitor thread operates concurrently with the coder threads. It reads shared
 | Monitor thread | Detects burnout and terminates the simulation. |
 
 The Codexion simulation is a rich exercise in concurrent programming. It requires not only the mechanical skills of using `pthread_create`, `pthread_mutex_lock`, and `pthread_cond_wait`, but also a deep understanding of why these primitives exist and how they interact. The challenges of deadlock, starvation, race conditions, and liveness are not abstract. They manifest concretely in the behavior of the simulation. A correct solution must demonstrate both technical proficiency and conceptual clarity.
-
-Codexion
