@@ -6,12 +6,12 @@ int parser(int argc, char **argv) {
     i = 1;
     if (argc != 9) {
         printf("Usage: codexion <num_coders> <burnout> <compile> <debug> "
-                    "<refactor> <compiles> <cooldown> <scheduler>\n");
+                    "<refactor> <compiles> <dongle_cooldown> <scheduler>\n");
         return 1;
     }
     while (i <= 7) {
-        if (!ft_atoi(argv[i])) {
-            printf("<%s>: It needs to be an int\n", get_arg(i));
+        if (!ft_atoi(argv[i]) || ft_atoi(argv[i]) < 0) {
+            printf("<%s>: It needs to be a positive int\n", get_arg(i));
             return 1;
         }
         i++;

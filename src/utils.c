@@ -48,6 +48,6 @@ void ft_showinfo(int argc, char **argv) {
 }
 
 const char *get_arg(int index) {
-    return (args[index]);
+    return (args[index - 1]);
 }
 
