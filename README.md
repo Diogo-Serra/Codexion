@@ -2,7 +2,7 @@
 
 # Codexion
 
-Codexion is a concurrency simulation written in C that models coders in a circular co-working hub compiling quantum code with USB dongles, demonstrating proper use of POSIX threads, mutexes, condition variables, and priority queues without deadlock or starvation.
+Concurrency simulation written in C
 
 ## Description
 
