@@ -20,7 +20,7 @@ int	main(int argc, char **argv)
 	operation = parser(argc, argv);
 	if (operation == 1)
 		return (1);
-	i = 0;
+	i = 1;
 	printf("Data:\n");
 	while (i <= argc - 1)
 	{
