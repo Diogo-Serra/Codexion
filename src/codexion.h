@@ -71,12 +71,13 @@ typedef struct s_engine
 	int			total_compiles;
 }	t_engine;
 
-
 t_engine	*loader(char **argv);
 void		init_dongles(t_dongle *dongles, int n);
 void		init_coders(t_engine *e, int n);
 int			ft_strcmp(const char *s1, const char *s2);
 int			ft_atoi(const char *s);
 const char	*get_arg(int index);
+int			parser(int argc, char **argv);
+int			is_valid_number(const char *s);
 
 #endif

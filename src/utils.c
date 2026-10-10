@@ -61,3 +61,12 @@ const char	*get_arg(int index)
 		return ("SCHEDULER");
 	return (NULL);
 }
+
+int	is_valid_number(const char *s)
+{
+	if (!*s)
+		return (0);
+	while (*s)
+		s++;
+	return (1);
+}

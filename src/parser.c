@@ -25,7 +25,7 @@ int	parser(int argc, char **argv)
 	}
 	while (i <= 7)
 	{
-		if (!ft_atoi(argv[i]) || ft_atoi(argv[i]) < 0)
+		if (!is_valid_number(argv[i]) || ft_atoi(argv[i]) < 0)
 		{
 			printf("<%s>: It needs to be a positive int\n", get_arg(i));
 			return (1);

@@ -1,7 +1,5 @@
 #include "codexion.h"
 
-#include "codexion.h"
-
 void	init_dongles(t_dongle *dongles, int n)
 {
 	int	i;
