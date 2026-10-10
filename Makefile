@@ -6,7 +6,7 @@ CFLAGS	= -Wall -Wextra -Werror -pthread
 
 SRC_DIR	= src
 OBJ_DIR	= obj
-SRC		= main.c engine.c utils.c parser.c
+SRC		= main.c engine.c utils.c parser.c loader.c loader_init.c
 OBJ		= $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o))
 
 all: $(NAME)

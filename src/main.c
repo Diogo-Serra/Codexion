@@ -20,13 +20,6 @@ int	main(int argc, char **argv)
 	operation = parser(argc, argv);
 	if (operation == 1)
 		return (1);
-	i = 1;
-	printf("Data:\n");
-	while (i <= argc - 1)
-	{
-		printf("%-18s%s\n", get_arg(i), argv[i]);
-		i++;
-	}
 	if (operation == 2)
 		return (0);
 	if (operation == 3)

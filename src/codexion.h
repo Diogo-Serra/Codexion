@@ -6,84 +6,77 @@
 /*   By: diserra <diosoare@student.42lisboa.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/10 17:18:51 by diserra           #+#    #+#             */
-/*   Updated: 2026/10/10 17:27:57 by diserra          ###   ########.fr       */
+/*   Updated: 2026/10/10 20:08:32 by diserra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CODEXION_H
 # define CODEXION_H
 
-# include <pthread.h>
 # include <sys/time.h>
 # include <stdlib.h>
 # include <stdio.h>
 # include <stdbool.h>
 
-# define NUM_CODERS      5
-# define BURNOUT         100
-# define COMPILE         200
-# define DEBUG           100
-# define REFACTOR        150
-# define NUM_COMPILES    3
-# define DONGLE_COOLDOWN 100
-# define SCHEDULER       "EDF" // FIFO
+typedef enum e_policy
+{
+	FIFO,
+	EDF
+}	t_policy;
 
-typedef struct s_Coder
+typedef struct s_dongle
 {
 	int		id;
-	int		num_compiles;
-	time_t	last_compiler_start;
-	time_t	last_compile_end;
-	time_t	last_debug_start;
-	time_t	last_refactor_start;
-	time_t	last_compile_finish;
-	time_t	burnout_time;
-	bool	is_alive;
-	int		dongle_cooldown_remaining;
-}	t_Coder;
+	long	last_released;
+	long	cooldown_until;
+	bool	is_available;
+}	t_dongle;
 
-typedef struct s_Dongle
+typedef struct s_coder
 {
-	int		id;
-	time_t	last_released;
-	time_t	cooldown_until;
-	int		is_available;
-}	t_Dongle;
+	int				id;
+	int				num_compiles;
+	long			last_compile_start;
+	long			last_compile_end;
+	long			last_debug_start;
+	long			last_refactor_start;
+	long			burnout_time;
+	bool			is_alive;
+	t_dongle		*left;
+	t_dongle		*right;
+	struct s_engine	*engine;
+}	t_coder;
 
-typedef struct s_Scheduler
+typedef struct s_scheduler
 {
-	int	num_coder;
-	int	num_dongles;
-	int	time_to_burnout;
-	int	time_to_compile;
-	int	time_to_debug;
-	int	time_to_refactor;
-	int	time_to_refactor_required;
-	int	dongle_cooldown;
-}	t_Scheduler;
+	int			num_coder;
+	int			num_dongles;
+	int			time_to_burnout;
+	int			time_to_compile;
+	int			time_to_debug;
+	int			time_to_refactor;
+	int			num_compiles_required;
+	int			dongle_cooldown;
+	t_policy	policy;
+}	t_scheduler;
 
-typedef struct t_Engine
+typedef struct s_engine
 {
-	t_Coder		coder_array[1000];
-	t_Dongle	dongle_array[1000];
-	t_Scheduler	config;
-	time_t		simulation_start;
-	time_t		simulation_end;
+	t_coder		*coders;
+	t_dongle	*dongles;
+	t_scheduler	config;
+	long		simulation_start;
+	bool		simulation_end;
 	int			num_coders_alive;
 	int			total_compiles;
-}	t_Engine;
+}	t_engine;
 
-typedef struct s_PriorityQueue
-{
-	t_Coder	*elements;
-	int		size;
-	int		capacity;
-}	t_PriorityQueue;
 
-// Util Function
-int			ft_atoi(const char *s);
-int			parser(int argc, char **argv);
+t_engine	*loader(char **argv);
+void		init_dongles(t_dongle *dongles, int n);
+void		init_coders(t_engine *e, int n);
 int			ft_strcmp(const char *s1, const char *s2);
+int			ft_atoi(const char *s);
 const char	*get_arg(int index);
 
 #endif

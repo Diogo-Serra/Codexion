@@ -32,10 +32,10 @@ int	parser(int argc, char **argv)
 		}
 		i++;
 	}
-	if (!ft_strcmp(argv[8], "EDF"))
+	if (!ft_strcmp(argv[8], "edf"))
 		return (2);
-	else if (!ft_strcmp(argv[8], "FIFO"))
+	else if (!ft_strcmp(argv[8], "fifo"))
 		return (3);
-	printf("<SCHEDULER> needs to be FIFO or EDF\n");
+	printf("<SCHEDULER> needs to be fifo or edf\n");
 	return (1);
 }
