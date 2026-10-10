@@ -83,9 +83,7 @@ A local AI model (`LFM2.5-2.6B-GGUF`, Q8_0 quantization) was used throughout dev
 
 - Scaffolding the initial project structure (Makefile, source files, headers).
 - Explaining the Dining Philosophers problem and its mapping to the Codexion simulation.
-- Implementing and explaining the priority queue (binary heap) for FIFO and EDF scheduling.
-- Implementing and explaining the dongle cooldown logic.
-- Implementing the monitor thread for precise burnout detection.
+- Explaining the priority queue (binary heap) for FIFO and EDF scheduling.
 - Running the simulation end-to-end and checking for deadlocks, starvation, and data races.
 - Drafting and iterating on this README.
 
@@ -106,17 +104,6 @@ All AI-generated content was reviewed, tested, and understood by the authors.
 - **Monitor thread**: reads each coder's `last_compile_start` under mutex protection and checks a termination flag.
 - **Custom event implementation**: condition variables combined with predicates signal state changes, such as a dongle being released and its cooldown expiring.
 - **Race condition prevention**: all shared data is accessed under the appropriate mutex. For example, when a coder takes a dongle, it locks the dongle mutex, checks availability, updates state, and unlocks. The monitor locks each coder's state mutex before reading `last_compile_start`.
-
-
-## How AI was used on this project
-
-A local AI model (Qwen3.8 4B Distill, Qwen3.8-4B-Distill-GGUF, Q8_0 quantization) was used throughout development for:
-
-- Scaffolding the initial project structure (Makefile, source files, headers).
-- Explaining the Dining Philosophers problem and its mapping to the Codexion simulation.
-- Explaining the priority queue (binary heap) for FIFO and EDF scheduling.
-- Running the simulation end-to-end and checking for deadlocks, starvation, and data races.
-- Drafting and iterating on this README.
 
 ---
 
