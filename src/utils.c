@@ -1,18 +1,25 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: diserra <diosoare@student.42lisboa.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/10/10 14:28:09 by diserra           #+#    #+#             */
+/*   Updated: 2026/10/10 17:17:42 by diserra          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "codexion.h"
 
-static const char *args[] = {
-    "NUM_CODERS", "BURNOUT",
-    "COMPILE", "DEBUG",
-    "REFACTOR", "NUM_COMPILES",
-    "DONGLE_COOLDOWN", "SCHEDULER",
-};
-
-int ft_strcmp(const char *s1, const char *s2) {
-    while (*s1 && (*s1 == *s2)) {
-        s1++;
-        s2++;
-    }
-    return (unsigned char)*s1 - (unsigned char)*s2;
+int	ft_strcmp(const char *s1, const char *s2)
+{
+	while (*s1 && (*s1 == *s2))
+	{
+		s1++;
+		s2++;
+	}
+	return ((unsigned char)*s1 - (unsigned char)*s2);
 }
 
 int	ft_atoi(const char *s)
@@ -34,20 +41,23 @@ int	ft_atoi(const char *s)
 	return (number * sign);
 }
 
-void ft_showinfo(int argc, char **argv) {
-    int i;
-    int j;
-
-    i = 0;
-    j = 1;
-    printf("Data:\n");
-    while (j < argc - 1) {   
-        printf("%s: %i\n", args[i++], ft_atoi(argv[j++]));
-    }
-    printf("%s: %s\n", args[i], argv[j]);
+const char	*get_arg(int index)
+{
+	if (index == 1)
+		return ("NUM_CODERS");
+	else if (index == 2)
+		return ("BURNOUT");
+	else if (index == 3)
+		return ("COMPILE");
+	else if (index == 4)
+		return ("DEBUG");
+	else if (index == 5)
+		return ("REFACTOR");
+	else if (index == 6)
+		return ("NUM_COMPILES");
+	else if (index == 7)
+		return ("DONGLE_COOLDOWN");
+	else if (index == 8)
+		return ("SCHEDULER");
+	return (NULL);
 }
-
-const char *get_arg(int index) {
-    return (args[index - 1]);
-}
-
