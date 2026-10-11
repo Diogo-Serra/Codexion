@@ -70,3 +70,25 @@ int	is_valid_number(const char *s)
 		s++;
 	return (1);
 }
+
+char	*get_enum(bool	n)
+{
+	if (n == 0)
+		return ("fifo");
+	if (n == 1)
+		return ("edf");
+	return (NULL);
+}
+
+void	show_settings(t_engine	*engine)
+{
+		printf("%i\n", engine->config.num_coder);
+		printf("%i\n", engine->config.num_dongles);
+		printf("%i\n", engine->config.time_to_burnout);
+		printf("%i\n", engine->config.time_to_compile);
+		printf("%i\n", engine->config.time_to_debug);
+		printf("%i\n", engine->config.time_to_refactor);
+		printf("%i\n", engine->config.num_compiles_required);
+		printf("%i\n", engine->config.dongle_cooldown);
+		printf("%s\n", get_enum(engine->config.policy));
+}

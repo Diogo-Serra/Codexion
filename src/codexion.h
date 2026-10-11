@@ -79,5 +79,6 @@ int			ft_atoi(const char *s);
 const char	*get_arg(int index);
 int			parser(int argc, char **argv);
 int			is_valid_number(const char *s);
+void		show_settings(t_engine	*engine);
 
 #endif

@@ -3,4 +3,5 @@ codexion
 .python-version
 pyproject.toml
 uv.lock
-
+subject.pdf
+.venv

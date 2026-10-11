@@ -20,29 +20,15 @@ int	main(int argc, char **argv)
 	operation = parser(argc, argv);
 	if (operation == 1)
 		return (1);
+	engine = loader(argv);
 	if (operation == 2)
 	{
-		engine = loader(argv);
-		printf("%i\n", engine->config.num_coder);
-		printf("%i\n", engine->config.num_dongles);
-		printf("%i\n", engine->config.time_to_burnout);
-		printf("%i\n", engine->config.time_to_compile);
-		printf("%i\n", engine->config.time_to_debug);
-		printf("%i\n", engine->config.time_to_refactor);
-		printf("%i\n", engine->config.num_compiles_required);
-		printf("%i\n", engine->config.dongle_cooldown);
-		printf("%i\n", engine->config.policy);
+		show_settings(engine);
 	}
 	if (operation == 3)
-		engine = loader(argv);
-		printf("%i\n", engine->config.num_coder);
-		printf("%i\n", engine->config.num_dongles);
-		printf("%i\n", engine->config.time_to_burnout);
-		printf("%i\n", engine->config.time_to_compile);
-		printf("%i\n", engine->config.time_to_debug);
-		printf("%i\n", engine->config.time_to_refactor);
-		printf("%i\n", engine->config.num_compiles_required);
-		printf("%i\n", engine->config.dongle_cooldown);
-		printf("%i\n", engine->config.policy);
+	{
+
+		show_settings(engine);
+	}
 	return (0);
 }

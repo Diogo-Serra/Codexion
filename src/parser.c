@@ -21,6 +21,7 @@ int	parser(int argc, char **argv)
 	{
 		printf("Usage: codexion <num_coders> <burnout> <compile> <debug>");
 		printf(" <refactor> <compiles> <dongle_cooldown> <scheduler>\n");
+		printf("Error: Missing arguments.\n");
 		return (1);
 	}
 	while (i <= 7)
