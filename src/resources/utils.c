@@ -6,12 +6,13 @@
 /*   By: diserra <diosoare@student.42lisboa.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/10 14:28:09 by diserra           #+#    #+#             */
-/*   Updated: 2026/10/12 18:40:04 by diserra          ###   ########.fr       */
+/*   Updated: 2026/10/12 20:42:26 by diserra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
+// Convert string to integer
 int	ft_atoi(const char *s)
 {
 	int	number;
@@ -31,6 +32,7 @@ int	ft_atoi(const char *s)
 	return (number * sign);
 }
 
+// Map argument index to human-readable name
 const char	*get_arg(int index)
 {
 	if (index == 1)
@@ -52,6 +54,7 @@ const char	*get_arg(int index)
 	return (NULL);
 }
 
+// Get current time in milliseconds
 u_int64_t	get_time(void)
 {
 	struct timeval	tv;

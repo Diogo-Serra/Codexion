@@ -16,7 +16,15 @@ Codexion is a concurrency simulation written in C. It models coders seated in a 
 make
 ```
 
-The Makefile compiles the project with `cc -Wall -Wextra -Werror -pthread`. It contains the rules `NAME`, `all`, `clean`, `fclean`, and `re`.
+The Makefile compiles the project with `cc -Wall -Wextra -Werror -pthread`. It contains the rules `NAME`, `all`, `test`, `clean`, `fclean`, and `re`.
+
+### Testing
+
+To run the project's automated test suite:
+
+```sh
+make test
+```
 
 ### Execution
 
@@ -87,23 +95,23 @@ A local AI model (`LFM2.5-2.6B-GGUF`, Q8_0 quantization) was used throughout dev
 - Running the simulation end-to-end and checking for deadlocks, starvation, and data races.
 - Drafting and iterating on this README.
 
-All AI-generated content was reviewed, tested, and understood by the authors.
+All AI-generated content was reviewed, tested, and understood by the author.
 
 ## Blocking cases handled
 
 - **Deadlock**: prevented by scheduler-aware granting and by breaking the circular wait condition. The four Coffman conditions are analyzed in the theoretical appendix.
 - **Starvation**: FIFO ensures arrival-order fairness. EDF prioritizes the earliest deadline and guarantees liveness under feasible parameters.
 - **Cooldown**: each dongle tracks its release time and remains unavailable for `dongle_cooldown` milliseconds.
-- **Burnout detection**: a dedicated monitor thread checks deadlines and logs burnout within 10 ms of the actual deadline violation.
+- **Burnout detection**: a dedicated monitor thread checks deadlines and logs burnout promptly when a deadline is violated.
 - **Log serialization**: a dedicated mutex protects all output so that two messages never interleave on a single line.
 
 ## Thread synchronization mechanisms
 
 - `pthread_mutex_t`: one mutex per dongle protects dongle state and request queue. A separate mutex protects logging. A mutex protects monitor state.
 - `pthread_cond_t`: one condition variable per dongle is used to wait for availability. Wait operations are wrapped in `while` loops to handle spurious wakeups.
-- **Monitor thread**: reads each coder's `last_compile_start` under mutex protection and checks a termination flag.
+- **Monitor thread**: reads each coder's state under mutex protection and checks a termination flag.
 - **Custom event implementation**: condition variables combined with predicates signal state changes, such as a dongle being released and its cooldown expiring.
-- **Race condition prevention**: all shared data is accessed under the appropriate mutex. For example, when a coder takes a dongle, it locks the dongle mutex, checks availability, updates state, and unlocks. The monitor locks each coder's state mutex before reading `last_compile_start`.
+- **Race condition prevention**: all shared data is accessed under the appropriate mutex. For example, when a coder takes a dongle, it locks the dongle mutex, checks availability, updates state, and unlocks. The monitor locks each coder's state mutex before reading their status.
 
 ---
 

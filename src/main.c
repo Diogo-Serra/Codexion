@@ -6,30 +6,29 @@
 /*   By: diserra <diosoare@student.42lisboa.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/10 17:57:09 by diserra           #+#    #+#             */
-/*   Updated: 2026/10/12 20:19:26 by diserra          ###   ########.fr       */
+/*   Updated: 2026/10/12 21:58:23 by diserra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
+// Entry point of the simulation
 int	main(int argc, char **argv)
 {
 	int			operation;
+	int			status;
+	t_policy	policy;
 	t_scheduler	scheduler;
-	
+
 	operation = parser(argc, argv);
-	// 1 - Fail , 2 - fifo, 3 - edf
 	if (operation == 1)
 		return (1);
+	policy = FIFO;
 	if (operation == 2)
-	{
-		scheduler = initialize(argv, EDF);
-		ft_exit(&scheduler, "SUCCESS");
-	}
-	if (operation == 3)
-	{
-		scheduler = initialize(argv, FIFO);
-		ft_exit(&scheduler, "SUCCESS");
-	}
-	return (0);
+		policy = EDF;
+	if (initialize(&scheduler, argv, policy))
+		return (1);
+	status = run_simulation(&scheduler);
+	ft_exit(&scheduler, NULL);
+	return (status);
 }
