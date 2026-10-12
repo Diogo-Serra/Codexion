@@ -6,7 +6,7 @@
 /*   By: diserra <diosoare@student.42lisboa.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/10 17:57:09 by diserra           #+#    #+#             */
-/*   Updated: 2026/10/11 16:25:26 by diserra          ###   ########.fr       */
+/*   Updated: 2026/10/12 20:19:26 by diserra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,20 +15,21 @@
 int	main(int argc, char **argv)
 {
 	int			operation;
-	t_engine	*engine;
-
+	t_scheduler	scheduler;
+	
 	operation = parser(argc, argv);
+	// 1 - Fail , 2 - fifo, 3 - edf
 	if (operation == 1)
 		return (1);
-	engine = loader(argv);
 	if (operation == 2)
 	{
-		show_settings(engine);
+		scheduler = initialize(argv, EDF);
+		ft_exit(&scheduler, "SUCCESS");
 	}
 	if (operation == 3)
 	{
-
-		show_settings(engine);
+		scheduler = initialize(argv, FIFO);
+		ft_exit(&scheduler, "SUCCESS");
 	}
 	return (0);
 }

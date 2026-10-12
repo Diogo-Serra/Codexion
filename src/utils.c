@@ -6,21 +6,11 @@
 /*   By: diserra <diosoare@student.42lisboa.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/10 14:28:09 by diserra           #+#    #+#             */
-/*   Updated: 2026/10/10 21:49:10 by diserra          ###   ########.fr       */
+/*   Updated: 2026/10/12 18:40:04 by diserra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
-
-int	ft_strcmp(const char *s1, const char *s2)
-{
-	while (*s1 && (*s1 == *s2))
-	{
-		s1++;
-		s2++;
-	}
-	return ((unsigned char)*s1 - (unsigned char)*s2);
-}
 
 int	ft_atoi(const char *s)
 {
@@ -62,33 +52,14 @@ const char	*get_arg(int index)
 	return (NULL);
 }
 
-int	is_valid_number(const char *s)
+u_int64_t	get_time(void)
 {
-	if (!*s)
-		return (0);
-	while (*s)
-		s++;
-	return (1);
-}
+	struct timeval	tv;
 
-char	*get_enum(bool	n)
-{
-	if (n == 0)
-		return ("fifo");
-	if (n == 1)
-		return ("edf");
-	return (NULL);
-}
-
-void	show_settings(t_engine	*engine)
-{
-		printf("%i\n", engine->config.num_coder);
-		printf("%i\n", engine->config.num_dongles);
-		printf("%i\n", engine->config.time_to_burnout);
-		printf("%i\n", engine->config.time_to_compile);
-		printf("%i\n", engine->config.time_to_debug);
-		printf("%i\n", engine->config.time_to_refactor);
-		printf("%i\n", engine->config.num_compiles_required);
-		printf("%i\n", engine->config.dongle_cooldown);
-		printf("%s\n", get_enum(engine->config.policy));
+	if (gettimeofday(&tv, NULL))
+	{
+		printf("%s\n", TIME_ERROR);
+		return (-1);
+	}
+	return ((tv.tv_sec * (u_int64_t)1000) + (tv.tv_usec / 1000));
 }

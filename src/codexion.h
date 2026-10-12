@@ -6,7 +6,7 @@
 /*   By: diserra <diosoare@student.42lisboa.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/10 17:18:51 by diserra           #+#    #+#             */
-/*   Updated: 2026/10/10 20:08:32 by diserra          ###   ########.fr       */
+/*   Updated: 2026/10/12 19:47:43 by diserra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,30 @@
 # include <stdlib.h>
 # include <stdio.h>
 # include <stdbool.h>
+# include <pthread.h>
+
+//	parsing_errors
+# define ERROR_ARGS "INVALID NUMBER OF ARGUMENTS"
+# define ERROR_INT "ARGUMENTS NEED TO BE POSITIVE INTS"
+# define ERROR_SCHEDULER "<SCHEDULER> NEEDS TO BE fifo OR edf"
+//	alloc_errors
+# define ALLOC_ERROR_1 "ERROR ALLOCATING THREADS"
+# define ALLOC_ERROR_2 "ERROR ALLOCATING DONGLES"
+# define ALLOC_ERROR_3 "ERROR ALLOCATING CODERS"
+//	pthread_errors
+# define SCHEDULER_ERROR "ERROR WHILE LOADING SCHEDULER"
+# define THREAD_ERROR "ERROR WHILE CREATING THREADS"
+# define ALLOC_ERROR "ERROR WHILE JOINING THREADS"
+# define INIT_DONGLES "ERROR WHILE INIT DONGLES"
+# define INIT_CODERS "ERROR WHILE INIT CODERS"
+//	time_error
+# define TIME_ERROR "UNABLE TO RETRIVE UTC"
+//	coder_messages
+# define TAKE_DONGLE "has taken a dongle"
+# define COMPILING "is compiling"
+# define DEBUGGING "is debugging"
+# define REFACTORIG "is refactoring"
+# define BURNOUT "burned out"
 
 typedef enum e_policy
 {
@@ -24,61 +48,44 @@ typedef enum e_policy
 	EDF
 }	t_policy;
 
-typedef struct s_dongle
-{
-	int		id;
-	long	last_released;
-	long	cooldown_until;
-	bool	is_available;
-}	t_dongle;
-
 typedef struct s_coder
 {
-	int				id;
-	int				num_compiles;
-	long			last_compile_start;
-	long			last_compile_end;
-	long			last_debug_start;
-	long			last_refactor_start;
-	long			burnout_time;
-	bool			is_alive;
-	t_dongle		*left;
-	t_dongle		*right;
-	struct s_engine	*engine;
+	int					id;
+	int					num_compiles;
+	bool				compiling;
+	bool				is_alive;
+	u_int64_t			burnout_time;
+	pthread_t			thread_c;
+	pthread_mutex_t		lock;
+	pthread_mutex_t		*dongle_l;
+	pthread_mutex_t		*dongle_r;
+	struct s_scheduler	*scheduler;
 }	t_coder;
 
 typedef struct s_scheduler
 {
-	int			num_coder;
-	int			num_dongles;
-	int			time_to_burnout;
-	int			time_to_compile;
-	int			time_to_debug;
-	int			time_to_refactor;
-	int			num_compiles_required;
-	int			dongle_cooldown;
-	t_policy	policy;
+	pthread_t		*thread_s;
+	int				coder_num;
+	int				num_compiles;
+	bool			is_alive;
+	bool			is_finished;
+	t_coder			*coders;
+	u_int64_t		dongle_cooldown;
+	u_int64_t		compile_time;
+	u_int64_t		debug_time;
+	u_int64_t		refactor_time;
+	u_int64_t		burnout_time;
+	pthread_mutex_t	*dongles;
+	pthread_mutex_t	lock;
+	pthread_mutex_t	write;
+	t_policy		policy;
 }	t_scheduler;
 
-typedef struct s_engine
-{
-	t_coder		*coders;
-	t_dongle	*dongles;
-	t_scheduler	config;
-	long		simulation_start;
-	bool		simulation_end;
-	int			num_coders_alive;
-	int			total_compiles;
-}	t_engine;
-
-t_engine	*loader(char **argv);
-void		init_dongles(t_dongle *dongles, int n);
-void		init_coders(t_engine *e, int n);
-int			ft_strcmp(const char *s1, const char *s2);
 int			ft_atoi(const char *s);
 const char	*get_arg(int index);
 int			parser(int argc, char **argv);
-int			is_valid_number(const char *s);
-void		show_settings(t_engine	*engine);
+u_int64_t	get_time(void);
+t_scheduler	initialize(char **argv, t_policy flag);
+int			ft_exit(t_scheduler *scheduler, char *message);
 
 #endif

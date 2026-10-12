@@ -5,3 +5,4 @@ pyproject.toml
 uv.lock
 subject.pdf
 .venv
+tests.sh
