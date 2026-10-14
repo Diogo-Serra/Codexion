@@ -65,7 +65,7 @@ void	heap_pop(t_dongle *dongle)
 		if (child + 1 < dongle->size && req_less(&h[child + 1], &h[child]))
 			child++;
 		if (!req_less(&h[child], &h[i]))
-			break;
+			break ;
 		req_swap(&h[child], &h[i]);
 		i = child;
 	}
