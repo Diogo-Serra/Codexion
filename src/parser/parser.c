@@ -44,12 +44,28 @@ static int	is_valid_number(const char *s)
 	return (1);
 }
 
-// Parse command line arguments and validate input
-int	parser(int argc, char **argv)
+// Validate the numeric arguments
+static int	check_numbers(char **argv)
 {
 	int	i;
 
 	i = 1;
+	while (i <= 7)
+	{
+		if (!is_valid_number(argv[i]) || (i == 1 && ft_atoi(argv[i]) < 1)
+			|| (i == 6 && ft_atoi(argv[i]) < 1))
+		{
+			printf("<%s>: %s\n", get_arg(i), ERROR_INT);
+			return (1);
+		}
+		i++;
+	}
+	return (0);
+}
+
+// Parse command line arguments and validate input
+int	parser(int argc, char **argv)
+{
 	if (argc != 9)
 	{
 		printf("USAGE: codexion <num_coders> <burnout> <compile> <debug>");
@@ -57,15 +73,8 @@ int	parser(int argc, char **argv)
 		printf("%s\n", ERROR_ARGS);
 		return (1);
 	}
-	while (i <= 7)
-	{
-		if (!is_valid_number(argv[i]) || (i == 1 && ft_atoi(argv[i]) < 1))
-		{
-			printf("<%s>: %s\n", get_arg(i), ERROR_INT);
-			return (1);
-		}
-		i++;
-	}
+	if (check_numbers(argv))
+		return (1);
 	if (!ft_strcmp(argv[8], "edf"))
 		return (2);
 	else if (!ft_strcmp(argv[8], "fifo"))

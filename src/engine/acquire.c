@@ -65,14 +65,11 @@ static int	attempt(t_coder *coder, t_dongle *a, t_dongle *b)
 	return (state);
 }
 
-// Handle the case where only one dongle is needed
+// A lone coder cannot hold two dongles and will burn out
 static int	single_dongle(t_coder *coder)
 {
-	t_scheduler	*scheduler;
-
-	scheduler = coder->scheduler;
-	log_state(coder, TAKE_DONGLE);
-	smart_sleep(scheduler, scheduler->burnout_time + 100);
+	while (is_running(coder->scheduler))
+		usleep(500);
 	return (1);
 }
 

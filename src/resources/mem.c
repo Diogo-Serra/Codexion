@@ -15,12 +15,20 @@
 // Clean up scheduler memory
 void	free_scheduler(t_scheduler *scheduler)
 {
+	int	i;
+
+	if (scheduler->dongles)
+	{
+		i = -1;
+		while (++i < scheduler->coder_num)
+			free(scheduler->dongles[i].heap);
+	}
 	free(scheduler->dongles);
 	free(scheduler->coders);
 }
 
 // Destroy synchronization primitives and free memory
-int	ft_exit(t_scheduler *scheduler, char *message)
+void	ft_exit(t_scheduler *scheduler)
 {
 	int	i;
 
@@ -34,7 +42,4 @@ int	ft_exit(t_scheduler *scheduler, char *message)
 	pthread_mutex_destroy(&scheduler->write);
 	pthread_mutex_destroy(&scheduler->lock);
 	free_scheduler(scheduler);
-	if (message)
-		printf("%s\n", message);
-	return (0);
 }

@@ -29,6 +29,6 @@ int	main(int argc, char **argv)
 	if (initialize(&scheduler, argv, policy))
 		return (1);
 	status = run_simulation(&scheduler);
-	ft_exit(&scheduler, NULL);
+	ft_exit(&scheduler);
 	return (status);
 }

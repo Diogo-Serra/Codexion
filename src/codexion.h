@@ -40,8 +40,6 @@
 # define ACQ_WAIT 0
 # define ACQ_TAKEN 1
 # define ACQ_STOP 2
-//	dongle queue
-# define QUEUE_MAX 2
 //	coder_messages
 # define TAKE_DONGLE "has taken a dongle"
 # define COMPILING "is compiling"
@@ -66,7 +64,7 @@ typedef struct s_dongle
 	bool			taken;
 	int				size;
 	u_int64_t		available_at;
-	t_request		heap[QUEUE_MAX];
+	t_request		*heap;
 	pthread_mutex_t	lock;
 	pthread_cond_t	cond;
 }	t_dongle;
@@ -108,7 +106,7 @@ const char	*get_arg(int index);
 int			parser(int argc, char **argv);
 u_int64_t	get_time(void);
 int			initialize(t_scheduler *scheduler, char **argv, t_policy flag);
-int			ft_exit(t_scheduler *scheduler, char *message);
+void		ft_exit(t_scheduler *scheduler);
 void		free_scheduler(t_scheduler *scheduler);
 int			is_running(t_scheduler *scheduler);
 void		log_state(t_coder *coder, const char *message);
