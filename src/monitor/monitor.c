@@ -12,14 +12,13 @@
 
 #include "codexion.h"
 
-// Done wins over burnout; a coder mid-compile has met its deadline
-static int	check_coder(t_coder *coder, int required)
+static int	check_coder(t_coder *coder)
 {
 	int	state;
 
 	state = 0;
 	pthread_mutex_lock(&coder->lock);
-	if (coder->num_compiles >= required)
+	if (coder->finished)
 		state = ST_DONE;
 	else if (!coder->is_compiling && get_time() >= coder->burnout_time)
 		state = ST_BURNED;
@@ -27,7 +26,6 @@ static int	check_coder(t_coder *coder, int required)
 	return (state);
 }
 
-// Scan all coders to check for burnout or completion
 static int	scan_coders(t_scheduler *scheduler)
 {
 	int	i;
@@ -38,7 +36,7 @@ static int	scan_coders(t_scheduler *scheduler)
 	done = 0;
 	while (++i < scheduler->coder_num)
 	{
-		state = check_coder(&scheduler->coders[i], scheduler->num_compiles);
+		state = check_coder(&scheduler->coders[i]);
 		if (state == ST_BURNED)
 		{
 			log_burnout(&scheduler->coders[i]);
@@ -49,7 +47,6 @@ static int	scan_coders(t_scheduler *scheduler)
 	return (done);
 }
 
-// Monitor thread routine that checks simulation status
 void	*monitor(void *pointer)
 {
 	t_scheduler	*scheduler;

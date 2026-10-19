@@ -1,16 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   release.c                                          :+:      :+:    :+:   */
+/*   control.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: diosoare<diosoare@student.42lisboa.com>    +#+  +:+       +#+        */
+/*   By: diserra <diosoare@student.42lisboa.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/10/12 21:56:07 by diosoare          #+#    #+#             */
-/*   Updated: 2026/10/12 22:02:11 by diosoare         ###   ########.fr       */
+/*   Created: 2026/10/19 15:00:00 by diserra           #+#    #+#             */
+/*   Updated: 2026/10/19 15:00:00 by diserra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
+
+void	stop_simulation(t_scheduler *scheduler)
+{
+	pthread_mutex_lock(&scheduler->lock);
+	scheduler->is_alive = false;
+	pthread_mutex_unlock(&scheduler->lock);
+	wake_dongles(scheduler);
+}
+
+/* Sleep with microsecond precision while checking the simulation is alive */
+void	smart_sleep(t_scheduler *scheduler, u_int64_t duration)
+{
+	u_int64_t	end;
+	u_int64_t	now;
+
+	end = get_time_us() + (duration * 1000);
+	now = get_time_us();
+	while (now < end && is_running(scheduler))
+	{
+		if (end - now > 2000)
+			usleep(1000);
+		else
+			usleep(200);
+		now = get_time_us();
+	}
+}
 
 // Release a dongle and update its availability
 static void	release_one(t_dongle *dongle, u_int64_t cooldown)

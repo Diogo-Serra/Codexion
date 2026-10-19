@@ -12,7 +12,7 @@
 
 #include "codexion.h"
 
-// Compare two strings
+/* Compare two strings */
 static int	ft_strcmp(const char *s1, const char *s2)
 {
 	while (*s1 && (*s1 == *s2))
@@ -23,7 +23,7 @@ static int	ft_strcmp(const char *s1, const char *s2)
 	return ((unsigned char)*s1 - (unsigned char)*s2);
 }
 
-// Validate if a string is a valid integer
+/* Validate if a string is a valid non-negative integer (fits in int) */
 static int	is_valid_number(const char *s)
 {
 	long	value;
@@ -44,7 +44,7 @@ static int	is_valid_number(const char *s)
 	return (1);
 }
 
-// Validate the numeric arguments
+/* Validate numeric arguments: num_coders and num_compiles must be >= 1 */
 static int	check_numbers(char **argv)
 {
 	int	i;
@@ -52,7 +52,8 @@ static int	check_numbers(char **argv)
 	i = 1;
 	while (i <= 7)
 	{
-		if (!is_valid_number(argv[i]) || (i == 1 && ft_atoi(argv[i]) < 1))
+		if (!is_valid_number(argv[i])
+			|| ((i == 1 || i == 6) && ft_atoi(argv[i]) < 1))
 		{
 			printf("<%s>: %s\n", get_arg(i), ERROR_INT);
 			return (1);
@@ -62,7 +63,7 @@ static int	check_numbers(char **argv)
 	return (0);
 }
 
-// Parse command line arguments and validate input
+/* Parse command line arguments and validate input */
 int	parser(int argc, char **argv)
 {
 	if (argc != 9)

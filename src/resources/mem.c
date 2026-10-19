@@ -6,28 +6,20 @@
 /*   By: diosoare<diosoare@student.42lisboa.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/12 19:20:23 by diosoare          #+#    #+#             */
-/*   Updated: 2026/10/12 21:59:12 by diosoare         ###   ########.fr       */
+/*   Updated: 2026/10/12 22:30:00 by diosoare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
-// Clean up scheduler memory
 void	free_scheduler(t_scheduler *scheduler)
 {
-	int	i;
-
-	if (scheduler->dongles)
-	{
-		i = -1;
-		while (++i < scheduler->coder_num)
-			free(scheduler->dongles[i].heap);
-	}
 	free(scheduler->dongles);
 	free(scheduler->coders);
+	scheduler->dongles = NULL;
+	scheduler->coders = NULL;
 }
 
-// Destroy synchronization primitives and free memory
 void	ft_exit(t_scheduler *scheduler)
 {
 	int	i;

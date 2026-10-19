@@ -3,32 +3,35 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: diosoare<diosoare@student.42lisboa.com>    +#+  +:+       +#+        */
+/*   By: diserra <diosoare@student.42lisboa.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/10/10 17:57:09 by diosoare          #+#    #+#             */
-/*   Updated: 2026/10/12 21:58:23 by diosoare         ###   ########.fr       */
+/*   Created: 2026/10/12 22:30:00 by diserra           #+#    #+#             */
+/*   Updated: 2026/10/12 22:30:00 by diserra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
-// Entry point of the simulation
 int	main(int argc, char **argv)
 {
-	int			operation;
-	int			status;
-	t_policy	policy;
 	t_scheduler	scheduler;
+	t_policy	policy;
+	int			flag;
 
-	operation = parser(argc, argv);
-	if (operation == 1)
-		return (1);
-	policy = FIFO;
-	if (operation == 2)
+	flag = parser(argc, argv);
+	if (flag == 2)
 		policy = EDF;
+	else if (flag == 3)
+		policy = FIFO;
+	else
+		return (1);
 	if (initialize(&scheduler, argv, policy))
 		return (1);
-	status = run_simulation(&scheduler);
+	if (run_simulation(&scheduler))
+	{
+		ft_exit(&scheduler);
+		return (1);
+	}
 	ft_exit(&scheduler);
-	return (status);
+	return (0);
 }

@@ -76,6 +76,7 @@ typedef struct s_coder
 	int					id;
 	int					num_compiles;
 	bool				is_compiling;
+	bool				finished;
 	u_int64_t			burnout_time;
 	pthread_t			thread_c;
 	pthread_mutex_t		lock;
@@ -114,6 +115,7 @@ void		ft_exit(t_scheduler *scheduler);
 void		free_scheduler(t_scheduler *scheduler);
 int			is_running(t_scheduler *scheduler);
 void		log_state(t_coder *coder, const char *message);
+void		log_acquire(t_coder *coder);
 void		log_burnout(t_coder *coder);
 void		stop_simulation(t_scheduler *scheduler);
 void		smart_sleep(t_scheduler *scheduler, u_int64_t duration);

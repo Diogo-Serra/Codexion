@@ -64,6 +64,7 @@ static void	init_coders(t_scheduler *scheduler)
 		scheduler->coders[i].id = i + 1;
 		scheduler->coders[i].num_compiles = 0;
 		scheduler->coders[i].is_compiling = false;
+		scheduler->coders[i].finished = false;
 		pthread_mutex_init(&scheduler->coders[i].lock, NULL);
 	}
 }

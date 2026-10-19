@@ -8,8 +8,8 @@ SRC_DIR     = src
 OBJ_DIR     = obj
 
 SRC         = main.c \
-              engine/routine.c engine/queue.c engine/wait.c \
-              engine/acquire.c engine/release.c \
+              engine/routine.c engine/queue.c engine/acquire.c \
+              engine/run.c engine/control.c \
               resources/mem.c resources/utils.c \
               parser/parser.c parser/init.c \
               monitor/monitor.c monitor/log.c
