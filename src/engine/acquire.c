@@ -6,7 +6,7 @@
 /*   By: diosoare <diosoare@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/19 18:09:08 by diosoare          #+#    #+#             */
-/*   Updated: 2026/10/19 18:09:11 by diosoare         ###   ########.fr       */
+/*   Updated: 2026/10/19 18:31:27 by diosoare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ static u_int64_t	request_key(t_coder *coder)
 		pthread_mutex_unlock(&coder->lock);
 		return (key);
 	}
-	pthread_mutex_lock(&scheduler->lock);
 	key = scheduler->ticket++;
 	pthread_mutex_unlock(&scheduler->lock);
 	return (key);
