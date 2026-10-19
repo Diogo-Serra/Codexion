@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   wait.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: diosoare<diosoare@student.42lisboa.com>    +#+  +:+       +#+        */
+/*   By: diserra <diosoare@student.42lisboa.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/10/12 21:55:20 by diosoare          #+#    #+#             */
-/*   Updated: 2026/10/12 22:01:31 by diosoare         ###   ########.fr       */
+/*   Created: 2026/10/12 21:55:20 by diserra           #+#    #+#             */
+/*   Updated: 2026/10/12 22:01:31 by diserra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
-// Wait for a dongle to become available
+// Wait for a dongle (caller holds dongle->lock, and holds it again on return)
 void	wait_on(t_dongle *dongle, t_coder *coder)
 {
 	struct timespec	ts;
@@ -25,29 +25,36 @@ void	wait_on(t_dongle *dongle, t_coder *coder)
 	}
 	else
 		pthread_cond_wait(&dongle->cond, &dongle->lock);
-	pthread_mutex_unlock(&dongle->lock);
 }
 
-// Decide which dongle to wait on
-void	block_on(t_coder *coder, t_dongle *a, t_dongle *b)
+// Wait on the dongle that was not ready, then release its lock
+void	block_on(t_coder *coder, t_dongle *a, t_dongle *b, int ready_a)
 {
-	if (!is_ready(coder, a))
+	t_dongle	*target;
+
+	if (!ready_a)
 	{
 		pthread_mutex_unlock(&b->lock);
-		wait_on(a, coder);
+		target = a;
 	}
 	else
 	{
 		pthread_mutex_unlock(&a->lock);
-		wait_on(b, coder);
+		target = b;
 	}
+	wait_on(target, coder);
+	pthread_mutex_unlock(&target->lock);
 }
 
-// Mark dongles as taken and remove coder from queues
-void	take_both(t_dongle *a, t_dongle *b)
+// Take both dongles and start the new deadline atomically with the take
+void	take_both(t_coder *coder, t_dongle *a, t_dongle *b)
 {
 	a->taken = true;
 	b->taken = true;
 	heap_pop(a);
 	heap_pop(b);
+	pthread_mutex_lock(&coder->lock);
+	coder->burnout_time = get_time() + coder->scheduler->burnout_time;
+	coder->is_compiling = true;
+	pthread_mutex_unlock(&coder->lock);
 }

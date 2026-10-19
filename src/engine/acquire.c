@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   acquire.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: diosoare<diosoare@student.42lisboa.com>    +#+  +:+       +#+        */
+/*   By: diserra <diosoare@student.42lisboa.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/10/12 21:55:38 by diosoare          #+#    #+#             */
-/*   Updated: 2026/10/12 22:01:57 by diosoare         ###   ########.fr       */
+/*   Created: 2026/10/12 21:55:38 by diserra           #+#    #+#             */
+/*   Updated: 2026/10/12 22:01:57 by diserra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,18 +45,20 @@ static void	enqueue_both(t_coder *coder, t_dongle *a, t_dongle *b)
 static int	attempt(t_coder *coder, t_dongle *a, t_dongle *b)
 {
 	int	state;
+	int	ready_a;
 
 	pthread_mutex_lock(&a->lock);
 	pthread_mutex_lock(&b->lock);
 	state = ACQ_WAIT;
+	ready_a = is_ready(coder, a);
 	if (!is_running(coder->scheduler))
 		state = ACQ_STOP;
-	else if (is_ready(coder, a) && is_ready(coder, b))
+	else if (ready_a && is_ready(coder, b))
 		state = ACQ_TAKEN;
 	if (state == ACQ_TAKEN)
-		take_both(a, b);
+		take_both(coder, a, b);
 	if (state == ACQ_WAIT)
-		block_on(coder, a, b);
+		block_on(coder, a, b, ready_a);
 	else
 	{
 		pthread_mutex_unlock(&b->lock);
@@ -65,11 +67,14 @@ static int	attempt(t_coder *coder, t_dongle *a, t_dongle *b)
 	return (state);
 }
 
-// A lone coder cannot hold two dongles and will burn out
+// Handle the case where only one dongle is needed
 static int	single_dongle(t_coder *coder)
 {
-	while (is_running(coder->scheduler))
-		usleep(500);
+	t_scheduler	*scheduler;
+
+	scheduler = coder->scheduler;
+	log_state(coder, TAKE_DONGLE);
+	smart_sleep(scheduler, scheduler->burnout_time + 100);
 	return (1);
 }
 

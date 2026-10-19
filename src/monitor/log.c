@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   log.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: diosoare<diosoare@student.42lisboa.com>    +#+  +:+       +#+        */
+/*   By: diserra <diosoare@student.42lisboa.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/10/12 21:28:06 by diosoare          #+#    #+#             */
-/*   Updated: 2026/10/12 21:59:43 by diosoare         ###   ########.fr       */
+/*   Created: 2026/10/12 21:28:06 by diserra           #+#    #+#             */
+/*   Updated: 2026/10/12 21:59:43 by diserra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,12 +63,20 @@ void	stop_simulation(t_scheduler *scheduler)
 	wake_dongles(scheduler);
 }
 
-// Sleeps while checking if simulation is still running
+// Sleep with microsecond precision while checking the simulation is alive
 void	smart_sleep(t_scheduler *scheduler, u_int64_t duration)
 {
 	u_int64_t	end;
+	u_int64_t	now;
 
-	end = get_time() + duration;
-	while (get_time() < end && is_running(scheduler))
-		usleep(500);
+	end = get_time_us() + (duration * 1000);
+	now = get_time_us();
+	while (now < end && is_running(scheduler))
+	{
+		if (end - now > 2000)
+			usleep(1000);
+		else
+			usleep(200);
+		now = get_time_us();
+	}
 }

@@ -50,7 +50,7 @@ void	*routine(void *pointer)
 		release_dongles(coder);
 		log_state(coder, DEBUGGING);
 		smart_sleep(scheduler, scheduler->debug_time);
-		log_state(coder, REFACTORIG);
+		log_state(coder, REFACTORING);
 		smart_sleep(scheduler, scheduler->refactor_time);
 	}
 	return (NULL);

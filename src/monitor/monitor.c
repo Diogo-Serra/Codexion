@@ -3,26 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   monitor.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: diosoare<diosoare@student.42lisboa.com>    +#+  +:+       +#+        */
+/*   By: diserra <diosoare@student.42lisboa.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/10/12 21:28:59 by diosoare          #+#    #+#             */
-/*   Updated: 2026/10/12 22:00:11 by diosoare         ###   ########.fr       */
+/*   Created: 2026/10/12 21:28:59 by diserra           #+#    #+#             */
+/*   Updated: 2026/10/12 22:00:11 by diserra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
-// Check if a coder has burned out or finished their tasks
+// Done wins over burnout; a coder mid-compile has met its deadline
 static int	check_coder(t_coder *coder, int required)
 {
 	int	state;
 
 	state = 0;
 	pthread_mutex_lock(&coder->lock);
-	if (!coder->is_compiling && get_time() >= coder->burnout_time)
-		state = ST_BURNED;
-	else if (coder->num_compiles >= required)
+	if (coder->num_compiles >= required)
 		state = ST_DONE;
+	else if (!coder->is_compiling && get_time() >= coder->burnout_time)
+		state = ST_BURNED;
 	pthread_mutex_unlock(&coder->lock);
 	return (state);
 }

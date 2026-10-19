@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: diosoare<diosoare@student.42lisboa.com>    +#+  +:+       +#+        */
+/*   By: diserra <diosoare@student.42lisboa.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/10/10 14:28:09 by diosoare          #+#    #+#             */
-/*   Updated: 2026/10/12 20:42:26 by diosoare         ###   ########.fr       */
+/*   Created: 2026/10/10 14:28:09 by diserra           #+#    #+#             */
+/*   Updated: 2026/10/12 20:42:26 by diserra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,4 +65,14 @@ u_int64_t	get_time(void)
 		return (-1);
 	}
 	return ((tv.tv_sec * (u_int64_t)1000) + (tv.tv_usec / 1000));
+}
+
+// Get current time in microseconds (used for precise sleeping)
+u_int64_t	get_time_us(void)
+{
+	struct timeval	tv;
+
+	if (gettimeofday(&tv, NULL))
+		return (-1);
+	return ((tv.tv_sec * (u_int64_t)1000000) + tv.tv_usec);
 }

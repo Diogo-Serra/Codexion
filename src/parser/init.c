@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: diosoare<diosoare@student.42lisboa.com>    +#+  +:+       +#+        */
+/*   By: diserra <diosoare@student.42lisboa.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/10/12 16:40:26 by diosoare          #+#    #+#             */
-/*   Updated: 2026/10/12 21:58:53 by diosoare         ###   ########.fr       */
+/*   Created: 2026/10/12 16:40:26 by diserra           #+#    #+#             */
+/*   Updated: 2026/10/12 21:58:53 by diserra          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,13 @@
 // Allocate memory for scheduler resources
 static int	alloc_init(t_scheduler *scheduler)
 {
-	scheduler->dongles = calloc(scheduler->coder_num, sizeof(t_dongle));
+	scheduler->dongles = malloc(scheduler->coder_num * sizeof(t_dongle));
 	if (!scheduler->dongles)
 	{
 		printf("%s\n", ALLOC_ERROR_2);
 		return (1);
 	}
-	scheduler->coders = calloc(scheduler->coder_num, sizeof(t_coder));
+	scheduler->coders = malloc(scheduler->coder_num * sizeof(t_coder));
 	if (!scheduler->coders)
 	{
 		printf("%s\n", ALLOC_ERROR_3);
@@ -31,7 +31,7 @@ static int	alloc_init(t_scheduler *scheduler)
 }
 
 // Initialize dongle synchronization primitives
-static int	init_dongles(t_scheduler *scheduler)
+static void	init_dongles(t_scheduler *scheduler)
 {
 	int	i;
 	int	n;
@@ -41,9 +41,6 @@ static int	init_dongles(t_scheduler *scheduler)
 	while (++i < n)
 	{
 		memset(&scheduler->dongles[i], 0, sizeof(t_dongle));
-		scheduler->dongles[i].heap = malloc(n * sizeof(t_request));
-		if (!scheduler->dongles[i].heap)
-			return (1);
 		pthread_mutex_init(&scheduler->dongles[i].lock, NULL);
 		pthread_cond_init(&scheduler->dongles[i].cond, NULL);
 	}
@@ -53,7 +50,6 @@ static int	init_dongles(t_scheduler *scheduler)
 		scheduler->coders[i].dongle_r = &scheduler->dongles[i];
 		scheduler->coders[i].dongle_l = &scheduler->dongles[(i + n - 1) % n];
 	}
-	return (0);
 }
 
 // Initialize coder properties and locks
@@ -67,6 +63,7 @@ static void	init_coders(t_scheduler *scheduler)
 		scheduler->coders[i].scheduler = scheduler;
 		scheduler->coders[i].id = i + 1;
 		scheduler->coders[i].num_compiles = 0;
+		scheduler->coders[i].is_compiling = false;
 		pthread_mutex_init(&scheduler->coders[i].lock, NULL);
 	}
 }
@@ -95,11 +92,7 @@ int	initialize(t_scheduler *scheduler, char **argv, t_policy flag)
 		free_scheduler(scheduler);
 		return (1);
 	}
-	if (init_dongles(scheduler))
-	{
-		free_scheduler(scheduler);
-		return (1);
-	}
+	init_dongles(scheduler);
 	init_coders(scheduler);
 	pthread_mutex_init(&scheduler->write, NULL);
 	pthread_mutex_init(&scheduler->lock, NULL);
