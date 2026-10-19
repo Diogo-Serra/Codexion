@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   monitor.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: diserra <diosoare@student.42lisboa.com>    +#+  +:+       +#+        */
+/*   By: diosoare<diosoare@student.42lisboa.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/10/12 21:28:59 by diserra           #+#    #+#             */
-/*   Updated: 2026/10/12 22:00:11 by diserra          ###   ########.fr       */
+/*   Created: 2026/10/12 21:28:59 by diosoare          #+#    #+#             */
+/*   Updated: 2026/10/12 22:00:11 by diosoare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static int	check_coder(t_coder *coder, int required)
 
 	state = 0;
 	pthread_mutex_lock(&coder->lock);
-	if (get_time() >= coder->burnout_time)
+	if (!coder->is_compiling && get_time() >= coder->burnout_time)
 		state = ST_BURNED;
 	else if (coder->num_compiles >= required)
 		state = ST_DONE;

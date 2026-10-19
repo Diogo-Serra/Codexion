@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   release.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: diserra <diosoare@student.42lisboa.com>    +#+  +:+       +#+        */
+/*   By: diosoare<diosoare@student.42lisboa.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/10/12 21:56:07 by diserra           #+#    #+#             */
-/*   Updated: 2026/10/12 22:02:11 by diserra          ###   ########.fr       */
+/*   Created: 2026/10/12 21:56:07 by diosoare          #+#    #+#             */
+/*   Updated: 2026/10/12 22:02:11 by diosoare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

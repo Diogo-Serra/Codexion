@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   acquire.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: diserra <diosoare@student.42lisboa.com>    +#+  +:+       +#+        */
+/*   By: diosoare<diosoare@student.42lisboa.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/10/12 21:55:38 by diserra           #+#    #+#             */
-/*   Updated: 2026/10/12 22:01:57 by diserra          ###   ########.fr       */
+/*   Created: 2026/10/12 21:55:38 by diosoare          #+#    #+#             */
+/*   Updated: 2026/10/12 22:01:57 by diosoare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

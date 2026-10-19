@@ -45,7 +45,7 @@ Arguments:
 - `time_to_compile`: milliseconds a coder spends compiling while holding two dongles.
 - `time_to_debug`: milliseconds a coder spends debugging.
 - `time_to_refactor`: milliseconds a coder spends refactoring.
-- `number_of_compiles_required`: simulation stops after all coders reach this count.
+- `number_of_compiles_required`: simulation stops after all coders reach this count. `0` is accepted and stops the simulation immediately (every coder has trivially compiled at least 0 times); only negative values are rejected.
 - `dongle_cooldown`: milliseconds a dongle is unavailable after being released.
 - `scheduler`: `fifo` or `edf`.
 
@@ -102,16 +102,16 @@ All AI-generated content was reviewed, tested, and understood by the author.
 - **Deadlock**: prevented by scheduler-aware granting and by breaking the circular wait condition. The four Coffman conditions are analyzed in the theoretical appendix.
 - **Starvation**: FIFO ensures arrival-order fairness. EDF prioritizes the earliest deadline and guarantees liveness under feasible parameters.
 - **Cooldown**: each dongle tracks its release time and remains unavailable for `dongle_cooldown` milliseconds.
-- **Burnout detection**: a dedicated monitor thread checks deadlines and logs burnout promptly when a deadline is violated.
+- **Burnout detection**: a dedicated monitor thread checks deadlines and logs burnout promptly when a deadline is violated. A coder that has already started compiling is never declared burned out during that compile (the monitor skips coders whose `is_compiling` flag is set): burnout is only declared when a coder fails to *start* a compile in time.
 - **Log serialization**: a dedicated mutex protects all output so that two messages never interleave on a single line.
 
 ## Thread synchronization mechanisms
 
-- `pthread_mutex_t`: one mutex per dongle protects dongle state and request queue. A separate mutex protects logging. A mutex protects monitor state.
-- `pthread_cond_t`: one condition variable per dongle is used to wait for availability. Wait operations are wrapped in `while` loops to handle spurious wakeups.
-- **Monitor thread**: reads each coder's state under mutex protection and checks a termination flag.
-- **Custom event implementation**: condition variables combined with predicates signal state changes, such as a dongle being released and its cooldown expiring.
-- **Race condition prevention**: all shared data is accessed under the appropriate mutex. For example, when a coder takes a dongle, it locks the dongle mutex, checks availability, updates state, and unlocks. The monitor locks each coder's state mutex before reading their status.
+- `pthread_mutex_t`: one mutex per dongle protects dongle state and its request queue. A dedicated `write` mutex serialises logging. A scheduler mutex protects the termination flag and the FIFO ticket counter, and every coder has its own mutex protecting its state (`num_compiles`, `burnout_time`, `is_compiling`).
+- `pthread_cond_t`: one condition variable per dongle is used to wait for availability. Every wake-up is followed by a full predicate re-check: `acquire_dongles` re-runs `attempt`, which re-locks both dongles and re-tests the condition. This retry loop is what makes the code safe against spurious wake-ups and against broadcasts that were not aimed at the woken coder.
+- **Monitor thread**: reads each coder's state under mutex protection and checks the termination flag.
+- **Custom event implementation**: condition variables combined with a predicate (heap head, `taken` flag and `available_at`) signal state changes, such as a dongle being released or its cooldown expiring.
+- **Race condition prevention**: all shared data is accessed under the appropriate mutex. When a coder takes dongles it locks both dongle mutexes in a fixed pointer order, verifies that it is the head of *both* request heaps and that both dongles are free, then flips both `taken` flags and pops both heaps atomically. The monitor locks a coder's own mutex before reading its status, so it never observes a torn value.
 
 ---
 
@@ -166,7 +166,7 @@ Mutexes alone are insufficient for all synchronization needs. Often, a thread mu
 
 The correct usage pattern for condition variables is to wait inside a **while loop** that checks the condition predicate. This is necessary because condition variables can experience **spurious wakeups**. The thread may be awakened even though the condition it is waiting for is not true. Additionally, if multiple threads are waiting on the same condition variable, `pthread_cond_signal` may wake any one of them, not necessarily the one that should proceed. Wrapping the wait in a while loop ensures that a thread only proceeds when its specific predicate is satisfied.
 
-In the Codexion simulation, each dongle has an associated condition variable. When a dongle is released and its cooldown has passed, the releasing thread signals the condition variable to wake waiting coders.
+In the Codexion simulation, each dongle has an associated condition variable. When a dongle is released the releasing thread broadcasts on its condition variable. A coder that is at the head of the queue but still inside the cooldown uses `pthread_cond_timedwait` to sleep until `available_at`, so it is woken exactly when the cooldown expires instead of busy-waiting.
 
 ## 4. Deadlock and Starvation
 
@@ -207,13 +207,13 @@ FIFO does not consider urgency. A coder with a very tight deadline may be stuck 
 
 ### 5.2 EDF Scheduling
 
-**Earliest Deadline First** is a dynamic priority scheduling algorithm used in real-time systems. Each coder has a deadline equal to `last_compile_start + time_to_burnout`. When a dongle becomes available, EDF grants it to the coder with the earliest deadline. The priority queue is dynamically updated as coders' deadlines change.
+**Earliest Deadline First** is a dynamic priority scheduling algorithm used in real-time systems. Each coder has a deadline equal to `last_compile_start + time_to_burnout`. When a dongle becomes available, EDF grants it to the coder with the earliest deadline. The deadline is captured the moment the coder makes its request; it only changes after the coder compiles again, at which point it enqueues a fresh request, so no in-place priority update is ever needed.
 
 EDF is optimal for uniprocessor real-time scheduling: if any scheduling algorithm can meet all deadlines, EDF can. However, this optimality holds only under certain conditions, such as when the system is not overloaded. In the Codexion simulation, EDF is designed to guarantee liveness: no coder should starve of dongles and burn out, provided the parameters are feasible.
 
 ### 5.3 Implementation Considerations
 
-Both FIFO and EDF require a priority queue. The heap must support insertion, extraction of the highest-priority element, and, for EDF, updates when a coder's deadline changes. The queue is protected by the dongle's mutex: enqueue and dequeue operations are atomic with respect to dongle state changes.
+Both FIFO and EDF require a priority queue. The heap supports insertion and extraction of the highest-priority element. Because a coder's deadline only changes when it compiles again (and therefore re-enqueues), no in-place priority update is required. The queue is protected by the dongle's mutex: enqueue and dequeue operations are atomic with respect to dongle state changes.
 
 ## 6. Resource Management: Dongle Cooldown
 
@@ -221,7 +221,7 @@ A distinctive feature of the Codexion simulation is the **dongle cooldown**. Aft
 
 Cooldown introduces a subtle challenge. During the cooldown period, the dongle is unavailable, but it is not held by any coder. If the cooldown is not properly enforced, a coder could acquire a dongle that is still cooling down, violating the simulation's rules. The implementation must track the release time of each dongle and compare it against the current time when a request is made.
 
-The cooldown also interacts with scheduling. If a dongle is in cooldown, pending requests must wait. The condition variable associated with the dongle should not be signaled until the cooldown has expired. This may require a timed wait or a periodic check.
+The cooldown also interacts with scheduling. If a dongle is in cooldown, pending requests must wait. Rather than signalling only once the cooldown has expired, the releasing thread broadcasts immediately and the head coder uses a timed wait (`pthread_cond_timedwait`) that targets `available_at`; this reaches the exact expiry instant without polling.
 
 ## 7. Burnout Detection and Liveness
 

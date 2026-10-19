@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: diserra <diosoare@student.42lisboa.com>    +#+  +:+       +#+        */
+/*   By: diosoare<diosoare@student.42lisboa.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/10/10 14:28:09 by diserra           #+#    #+#             */
-/*   Updated: 2026/10/12 20:42:26 by diserra          ###   ########.fr       */
+/*   Created: 2026/10/10 14:28:09 by diosoare          #+#    #+#             */
+/*   Updated: 2026/10/12 20:42:26 by diosoare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

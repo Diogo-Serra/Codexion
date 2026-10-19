@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   routine.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: diserra <diosoare@student.42lisboa.com>    +#+  +:+       +#+        */
+/*   By: diosoare<diosoare@student.42lisboa.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/10/12 21:29:21 by diserra           #+#    #+#             */
-/*   Updated: 2026/10/12 22:23:38 by diserra          ###   ########.fr       */
+/*   Created: 2026/10/12 21:29:21 by diosoare          #+#    #+#             */
+/*   Updated: 2026/10/12 22:23:38 by diosoare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,13 @@ static void	compile(t_coder *coder)
 	scheduler = coder->scheduler;
 	pthread_mutex_lock(&coder->lock);
 	coder->burnout_time = get_time() + scheduler->burnout_time;
+	coder->is_compiling = true;
 	pthread_mutex_unlock(&coder->lock);
 	log_state(coder, COMPILING);
 	smart_sleep(scheduler, scheduler->compile_time);
 	pthread_mutex_lock(&coder->lock);
 	coder->num_compiles++;
+	coder->is_compiling = false;
 	pthread_mutex_unlock(&coder->lock);
 }
 
@@ -40,6 +42,8 @@ void	*routine(void *pointer)
 		usleep(1000);
 	while (is_running(scheduler))
 	{
+		if (coder->num_compiles >= scheduler->num_compiles)
+			break ;
 		if (acquire_dongles(coder))
 			break ;
 		compile(coder);

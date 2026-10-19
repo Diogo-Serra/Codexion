@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: diserra <diosoare@student.42lisboa.com>    +#+  +:+       +#+        */
+/*   By: diosoare<diosoare@student.42lisboa.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/10/10 17:52:13 by diserra           #+#    #+#             */
-/*   Updated: 2026/10/12 21:58:38 by diserra          ###   ########.fr       */
+/*   Created: 2026/10/10 17:52:13 by diosoare          #+#    #+#             */
+/*   Updated: 2026/10/12 21:58:38 by diosoare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,7 @@ static int	check_numbers(char **argv)
 	i = 1;
 	while (i <= 7)
 	{
-		if (!is_valid_number(argv[i]) || (i == 1 && ft_atoi(argv[i]) < 1)
-			|| (i == 6 && ft_atoi(argv[i]) < 1))
+		if (!is_valid_number(argv[i]) || (i == 1 && ft_atoi(argv[i]) < 1))
 		{
 			printf("<%s>: %s\n", get_arg(i), ERROR_INT);
 			return (1);

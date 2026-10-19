@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   queue.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: diserra <diosoare@student.42lisboa.com>    +#+  +:+       +#+        */
+/*   By: diosoare<diosoare@student.42lisboa.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/10/12 22:00:56 by diserra           #+#    #+#             */
-/*   Updated: 2026/10/12 22:23:21 by diserra          ###   ########.fr       */
+/*   Created: 2026/10/12 22:00:56 by diosoare          #+#    #+#             */
+/*   Updated: 2026/10/12 22:23:21 by diosoare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

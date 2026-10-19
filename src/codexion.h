@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   codexion.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: diserra <diosoare@student.42lisboa.com>    +#+  +:+       +#+        */
+/*   By: diosoare<diosoare@student.42lisboa.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/10/10 17:18:51 by diserra           #+#    #+#             */
-/*   Updated: 2026/10/12 21:58:04 by diserra          ###   ########.fr       */
+/*   Created: 2026/10/10 17:18:51 by diosoare          #+#    #+#             */
+/*   Updated: 2026/10/12 21:58:04 by diosoare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ typedef struct s_coder
 {
 	int					id;
 	int					num_compiles;
+	bool				is_compiling;
 	u_int64_t			burnout_time;
 	pthread_t			thread_c;
 	pthread_mutex_t		lock;
