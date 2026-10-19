@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   acquire.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: diserra <diosoare@student.42lisboa.com>    +#+  +:+       +#+        */
+/*   By: diosoare <diosoare@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/10/12 21:55:38 by diserra           #+#    #+#             */
-/*   Updated: 2026/10/12 22:30:00 by diserra          ###   ########.fr       */
+/*   Created: 2026/10/19 18:09:08 by diosoare          #+#    #+#             */
+/*   Updated: 2026/10/19 18:09:11 by diosoare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
-/* Determine priority key based on scheduling policy */
+/* FIFO uses a ticket counter; EDF uses the coder's current deadline. */
 static u_int64_t	request_key(t_coder *coder)
 {
 	t_scheduler	*scheduler;
@@ -32,7 +32,7 @@ static u_int64_t	request_key(t_coder *coder)
 	return (key);
 }
 
-/* Add coder to the priority queues of both required dongles */
+/* Push the coder onto both dongle heaps under both locks. */
 static void	enqueue_both(t_coder *coder, t_dongle *a, t_dongle *b)
 {
 	u_int64_t	key;
@@ -46,7 +46,7 @@ static void	enqueue_both(t_coder *coder, t_dongle *a, t_dongle *b)
 	pthread_mutex_unlock(&a->lock);
 }
 
-/* Try to acquire both dongles if the coder is at the head of both queues */
+/* Try to take both dongles if we are head of both queues. */
 static int	attempt(t_coder *coder, t_dongle *a, t_dongle *b)
 {
 	int	state;
@@ -72,12 +72,14 @@ static int	attempt(t_coder *coder, t_dongle *a, t_dongle *b)
 	return (state);
 }
 
+/* Single-dongle case: sleep past the burnout deadline and return 1. */
 static int	single_dongle(t_coder *coder)
 {
 	smart_sleep(coder->scheduler, coder->scheduler->burnout_time + 100);
 	return (1);
 }
 
+/* Enqueue, wait until both are ours, log the take; return 0 or 1. */
 int	acquire_dongles(t_coder *coder)
 {
 	t_dongle	*a;

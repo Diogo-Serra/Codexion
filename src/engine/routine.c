@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   routine.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: diosoare<diosoare@student.42lisboa.com>    +#+  +:+       +#+        */
+/*   By: diosoare <diosoare@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/10/12 21:29:21 by diosoare          #+#    #+#             */
-/*   Updated: 2026/10/19 15:00:00 by diosoare         ###   ########.fr       */
+/*   Created: 2026/10/19 18:09:30 by diosoare          #+#    #+#             */
+/*   Updated: 2026/10/19 18:09:32 by diosoare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
+/* Sleep for the compile duration, then bump and clear is_compiling. */
 static void	compile(t_coder *coder)
 {
 	t_scheduler	*scheduler;
@@ -24,6 +25,7 @@ static void	compile(t_coder *coder)
 	pthread_mutex_unlock(&coder->lock);
 }
 
+/* Return 1 and mark the coder finished once num_compiles reaches required. */
 static int	should_stop(t_coder *coder)
 {
 	int	done;
@@ -36,7 +38,7 @@ static int	should_stop(t_coder *coder)
 	return (done);
 }
 
-/* One full compile + debug + refactor cycle. */
+/* Run one full compile + debug + refactor cycle for a coder. */
 static void	work_cycle(t_coder *coder)
 {
 	t_scheduler	*scheduler;
@@ -50,6 +52,7 @@ static void	work_cycle(t_coder *coder)
 	smart_sleep(scheduler, scheduler->refactor_time);
 }
 
+/* Coder thread: loop until done or simulation stops, one cycle per turn. */
 void	*routine(void *pointer)
 {
 	t_coder		*coder;

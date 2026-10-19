@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   log.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: diserra <diosoare@student.42lisboa.com>    +#+  +:+       +#+        */
+/*   By: diosoare <diosoare@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/10/12 21:28:06 by diserra           #+#    #+#             */
-/*   Updated: 2026/10/19 15:00:00 by diserra          ###   ########.fr       */
+/*   Created: 2026/10/19 18:09:45 by diosoare          #+#    #+#             */
+/*   Updated: 2026/10/19 18:09:46 by diosoare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
+/* Thread-safe read of the scheduler's is_alive flag. */
 int	is_running(t_scheduler *scheduler)
 {
 	int	running;
@@ -22,6 +23,7 @@ int	is_running(t_scheduler *scheduler)
 	return (running);
 }
 
+/* Print one timestamped state line under the write lock, if alive. */
 void	log_state(t_coder *coder, const char *message)
 {
 	t_scheduler	*scheduler;
@@ -35,6 +37,7 @@ void	log_state(t_coder *coder, const char *message)
 	pthread_mutex_unlock(&scheduler->write);
 }
 
+/* Print the 3-line TAKE/TAKE/COMPILING group atomically under one lock. */
 void	log_acquire(t_coder *coder)
 {
 	t_scheduler	*scheduler;
@@ -57,6 +60,7 @@ void	log_acquire(t_coder *coder)
 	pthread_mutex_unlock(&scheduler->write);
 }
 
+/* Mark dead, print the burnout line, flush, then wake all waiters. */
 void	log_burnout(t_coder *coder)
 {
 	t_scheduler	*scheduler;

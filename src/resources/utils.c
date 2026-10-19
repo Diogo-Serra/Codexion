@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: diserra <diosoare@student.42lisboa.com>    +#+  +:+       +#+        */
+/*   By: diosoare <diosoare@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/10/10 14:28:09 by diserra           #+#    #+#             */
-/*   Updated: 2026/10/12 20:42:26 by diserra          ###   ########.fr       */
+/*   Created: 2026/10/19 18:10:17 by diosoare          #+#    #+#             */
+/*   Updated: 2026/10/19 18:10:18 by diosoare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
-// Convert string to integer
+/* Parse a signed decimal integer from a null-terminated string. */
 int	ft_atoi(const char *s)
 {
 	int	number;
@@ -32,7 +32,7 @@ int	ft_atoi(const char *s)
 	return (number * sign);
 }
 
-// Map argument index to human-readable name
+/* Map a 1-based argument index to its display name. */
 const char	*get_arg(int index)
 {
 	if (index == 1)
@@ -54,7 +54,7 @@ const char	*get_arg(int index)
 	return (NULL);
 }
 
-// Get current time in milliseconds
+/* Current wall-clock time in milliseconds since the Unix epoch. */
 u_int64_t	get_time(void)
 {
 	struct timeval	tv;
@@ -67,7 +67,7 @@ u_int64_t	get_time(void)
 	return ((tv.tv_sec * (u_int64_t)1000) + (tv.tv_usec / 1000));
 }
 
-// Get current time in microseconds (used for precise sleeping)
+/* Current wall-clock time in microseconds, for precise sleeping. */
 u_int64_t	get_time_us(void)
 {
 	struct timeval	tv;

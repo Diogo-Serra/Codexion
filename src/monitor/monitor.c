@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   monitor.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: diserra <diosoare@student.42lisboa.com>    +#+  +:+       +#+        */
+/*   By: diosoare <diosoare@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/10/12 21:28:59 by diserra           #+#    #+#             */
-/*   Updated: 2026/10/12 22:00:11 by diserra          ###   ########.fr       */
+/*   Created: 2026/10/19 18:09:50 by diosoare          #+#    #+#             */
+/*   Updated: 2026/10/19 18:09:51 by diosoare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
+/* Classify one coder as DONE, BURNED, or still running (0). */
 static int	check_coder(t_coder *coder)
 {
 	int	state;
@@ -26,6 +27,7 @@ static int	check_coder(t_coder *coder)
 	return (state);
 }
 
+/* Return -1 on any burnout, otherwise the number of coders done. */
 static int	scan_coders(t_scheduler *scheduler)
 {
 	int	i;
@@ -47,6 +49,7 @@ static int	scan_coders(t_scheduler *scheduler)
 	return (done);
 }
 
+/* Poll every coder; stop the simulation on burnout or all-done. */
 void	*monitor(void *pointer)
 {
 	t_scheduler	*scheduler;

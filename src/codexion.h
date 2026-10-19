@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   codexion.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: diserra <diosoare@student.42lisboa.com>    +#+  +:+       +#+        */
+/*   By: diosoare <diosoare@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/10/10 17:18:51 by diserra           #+#    #+#             */
-/*   Updated: 2026/10/12 21:58:04 by diserra          ###   ########.fr       */
+/*   Created: 2026/10/19 18:10:22 by diosoare          #+#    #+#             */
+/*   Updated: 2026/10/19 18:10:24 by diosoare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,27 +22,19 @@
 # include <pthread.h>
 # include <unistd.h>
 
-//	parsing_errors
 # define ERROR_ARGS "INVALID NUMBER OF ARGUMENTS"
 # define ERROR_INT "ARGUMENTS NEED TO BE POSITIVE INTS"
 # define ERROR_SCHEDULER "<SCHEDULER> NEEDS TO BE fifo OR edf"
-//	alloc_errors
 # define ALLOC_ERROR_2 "ERROR ALLOCATING DONGLES"
 # define ALLOC_ERROR_3 "ERROR ALLOCATING CODERS"
-//	pthread_errors
 # define THREAD_ERROR "ERROR WHILE CREATING THREADS"
-//	time_error
 # define TIME_ERROR "UNABLE TO RETRIVE UTC"
-//	monitor_states
 # define ST_BURNED 1
 # define ST_DONE 2
-//	acquire_states
 # define ACQ_WAIT 0
 # define ACQ_TAKEN 1
 # define ACQ_STOP 2
-//	dongle queue: a dongle has only two neighbours, so two requests at most
 # define QUEUE_MAX 2
-//	coder_messages
 # define TAKE_DONGLE "has taken a dongle"
 # define COMPILING "is compiling"
 # define DEBUGGING "is debugging"

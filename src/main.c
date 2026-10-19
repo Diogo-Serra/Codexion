@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: diserra <diosoare@student.42lisboa.com>    +#+  +:+       +#+        */
+/*   By: diosoare <diosoare@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/10/12 22:30:00 by diserra           #+#    #+#             */
-/*   Updated: 2026/10/12 22:30:00 by diserra          ###   ########.fr       */
+/*   Created: 2026/10/19 18:10:27 by diosoare          #+#    #+#             */
+/*   Updated: 2026/10/19 18:10:29 by diosoare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
+/* Parse args, run the simulation, then always clean up. */
 int	main(int argc, char **argv)
 {
 	t_scheduler	scheduler;

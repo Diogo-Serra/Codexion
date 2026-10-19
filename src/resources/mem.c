@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   mem.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: diosoare<diosoare@student.42lisboa.com>    +#+  +:+       +#+        */
+/*   By: diosoare <diosoare@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/10/12 19:20:23 by diosoare          #+#    #+#             */
-/*   Updated: 2026/10/12 22:30:00 by diosoare         ###   ########.fr       */
+/*   Created: 2026/10/19 18:10:10 by diosoare          #+#    #+#             */
+/*   Updated: 2026/10/19 18:10:12 by diosoare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
+/* Free the two heap arrays only; dongle->heap is inline, never free it. */
 void	free_scheduler(t_scheduler *scheduler)
 {
 	free(scheduler->dongles);
@@ -20,6 +21,7 @@ void	free_scheduler(t_scheduler *scheduler)
 	scheduler->coders = NULL;
 }
 
+/* Destroy every mutex/cond, then release the heap arrays. */
 void	ft_exit(t_scheduler *scheduler)
 {
 	int	i;

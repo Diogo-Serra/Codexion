@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: diosoare<diosoare@student.42lisboa.com>    +#+  +:+       +#+        */
+/*   By: diosoare <diosoare@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/10/10 17:52:13 by diosoare          #+#    #+#             */
-/*   Updated: 2026/10/12 21:58:38 by diosoare         ###   ########.fr       */
+/*   Created: 2026/10/19 18:10:04 by diosoare          #+#    #+#             */
+/*   Updated: 2026/10/19 18:10:05 by diosoare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
-/* Compare two strings */
+/* Return zero if both strings are equal, non-zero otherwise. */
 static int	ft_strcmp(const char *s1, const char *s2)
 {
 	while (*s1 && (*s1 == *s2))
@@ -23,7 +23,7 @@ static int	ft_strcmp(const char *s1, const char *s2)
 	return ((unsigned char)*s1 - (unsigned char)*s2);
 }
 
-/* Validate if a string is a valid non-negative integer (fits in int) */
+/* Accept only an optional '+' followed by digits that fit in int. */
 static int	is_valid_number(const char *s)
 {
 	long	value;
@@ -44,7 +44,7 @@ static int	is_valid_number(const char *s)
 	return (1);
 }
 
-/* Validate numeric arguments: num_coders and num_compiles must be >= 1 */
+/* Validate all seven numbers; num_coders and num_compiles must be >= 1. */
 static int	check_numbers(char **argv)
 {
 	int	i;
@@ -63,7 +63,7 @@ static int	check_numbers(char **argv)
 	return (0);
 }
 
-/* Parse command line arguments and validate input */
+/* Validate argv; return 2 for edf, 3 for fifo, 1 on error. */
 int	parser(int argc, char **argv)
 {
 	if (argc != 9)

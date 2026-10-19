@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   queue.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: diserra <diosoare@student.42lisboa.com>    +#+  +:+       +#+        */
+/*   By: diosoare <diosoare@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/10/12 22:00:56 by diserra           #+#    #+#             */
-/*   Updated: 2026/10/12 22:23:21 by diserra          ###   ########.fr       */
+/*   Created: 2026/10/19 18:09:24 by diosoare          #+#    #+#             */
+/*   Updated: 2026/10/19 18:09:26 by diosoare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
-// Min-heap comparison logic
+/* Min-heap order: key, then odd-id first, then smaller id first. */
 static int	req_less(t_request *a, t_request *b)
 {
 	if (a->key != b->key)
@@ -22,7 +22,7 @@ static int	req_less(t_request *a, t_request *b)
 	return (a->id < b->id);
 }
 
-// Swap two heap requests
+/* Swap two requests in place. */
 static void	req_swap(t_request *a, t_request *b)
 {
 	t_request	tmp;
@@ -32,7 +32,7 @@ static void	req_swap(t_request *a, t_request *b)
 	*b = tmp;
 }
 
-// Push a request onto the dongle's priority heap
+/* Insert (key,id) into the heap and sift it up to restore order. */
 void	heap_push(t_dongle *dongle, u_int64_t key, int id)
 {
 	t_request	*h;
@@ -49,7 +49,7 @@ void	heap_push(t_dongle *dongle, u_int64_t key, int id)
 	}
 }
 
-// Pop the highest priority request from the heap
+/* Remove the min element and sift the last leaf down to restore order. */
 void	heap_pop(t_dongle *dongle)
 {
 	t_request	*h;
@@ -71,7 +71,7 @@ void	heap_pop(t_dongle *dongle)
 	}
 }
 
-// Check if a coder is the next eligible user of a dongle
+/* True iff coder is heap head, dongle is free, and cooldown has passed. */
 int	is_ready(t_coder *coder, t_dongle *dongle)
 {
 	return (dongle->size > 0 && dongle->heap[0].id == coder->id

@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   control.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: diserra <diosoare@student.42lisboa.com>    +#+  +:+       +#+        */
+/*   By: diosoare <diosoare@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/10/19 15:00:00 by diserra           #+#    #+#             */
-/*   Updated: 2026/10/19 15:00:00 by diserra          ###   ########.fr       */
+/*   Created: 2026/10/19 18:09:16 by diosoare          #+#    #+#             */
+/*   Updated: 2026/10/19 18:09:18 by diosoare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
+/* Flip is_alive to false under its lock, then wake all dongles. */
 void	stop_simulation(t_scheduler *scheduler)
 {
 	pthread_mutex_lock(&scheduler->lock);
@@ -20,7 +21,7 @@ void	stop_simulation(t_scheduler *scheduler)
 	wake_dongles(scheduler);
 }
 
-/* Sleep with microsecond precision while checking the simulation is alive */
+/* Sleep in short slices while the simulation is still alive. */
 void	smart_sleep(t_scheduler *scheduler, u_int64_t duration)
 {
 	u_int64_t	end;
@@ -38,7 +39,7 @@ void	smart_sleep(t_scheduler *scheduler, u_int64_t duration)
 	}
 }
 
-// Release a dongle and update its availability
+/* Release one dongle, set its cooldown, and broadcast its cond. */
 static void	release_one(t_dongle *dongle, u_int64_t cooldown)
 {
 	pthread_mutex_lock(&dongle->lock);
@@ -48,14 +49,14 @@ static void	release_one(t_dongle *dongle, u_int64_t cooldown)
 	pthread_mutex_unlock(&dongle->lock);
 }
 
-// Release both dongles held by a coder
+/* Release both of a coder's dongles with the shared cooldown. */
 void	release_dongles(t_coder *coder)
 {
 	release_one(coder->dongle_l, coder->scheduler->dongle_cooldown);
 	release_one(coder->dongle_r, coder->scheduler->dongle_cooldown);
 }
 
-// Wake up all coders waiting on any dongle
+/* Broadcast every dongle's cond so blocked coders re-check state. */
 void	wake_dongles(t_scheduler *scheduler)
 {
 	int	i;

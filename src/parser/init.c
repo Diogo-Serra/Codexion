@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: diserra <diosoare@student.42lisboa.com>    +#+  +:+       +#+        */
+/*   By: diosoare <diosoare@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/10/12 16:40:26 by diserra           #+#    #+#             */
-/*   Updated: 2026/10/12 21:58:53 by diserra          ###   ########.fr       */
+/*   Created: 2026/10/19 18:09:58 by diosoare          #+#    #+#             */
+/*   Updated: 2026/10/19 18:10:00 by diosoare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
-// Allocate memory for scheduler resources
+/* Allocate the dongle and coder arrays; return 1 on failure. */
 static int	alloc_init(t_scheduler *scheduler)
 {
 	scheduler->dongles = malloc(scheduler->coder_num * sizeof(t_dongle));
@@ -30,7 +30,7 @@ static int	alloc_init(t_scheduler *scheduler)
 	return (0);
 }
 
-// Initialize dongle synchronization primitives
+/* Init each dongle lock/cond and wire coders to their two neighbours. */
 static void	init_dongles(t_scheduler *scheduler)
 {
 	int	i;
@@ -52,7 +52,7 @@ static void	init_dongles(t_scheduler *scheduler)
 	}
 }
 
-// Initialize coder properties and locks
+/* Reset every coder's counters, flags, back-pointer and mutex. */
 static void	init_coders(t_scheduler *scheduler)
 {
 	int	i;
@@ -69,7 +69,7 @@ static void	init_coders(t_scheduler *scheduler)
 	}
 }
 
-// Load configuration from command line arguments
+/* Copy argv-driven parameters and the policy into the scheduler. */
 static void	load_scheduler(t_scheduler *scheduler, char **argv, t_policy flag)
 {
 	scheduler->coder_num = ft_atoi(argv[1]);
@@ -83,7 +83,7 @@ static void	load_scheduler(t_scheduler *scheduler, char **argv, t_policy flag)
 	scheduler->is_alive = true;
 }
 
-// Perform full system initialization
+/* Zero, load, allocate, then wire the whole scheduler; 1 on failure. */
 int	initialize(t_scheduler *scheduler, char **argv, t_policy flag)
 {
 	memset(scheduler, 0, sizeof(t_scheduler));
